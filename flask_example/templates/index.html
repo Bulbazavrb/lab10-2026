@@ -2,22 +2,63 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Голосування за фото</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Інтерактивна Python-вікторина — Лабораторна №10</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Обери найкраще фото тижня!</h1>
-    <div class="photos">
-        {% for photo in photos %}
-        <div class="photo">
-            <img src="{{ url_for('static', filename='photos/' + photo) }}" alt="{{ photo }}">
-            <button class="vote-button" data-photo-id="{{ photo }}">Голосувати</button>
-            <p>Голосів: <span id="votes-{{ photo }}">{{ votes.get(photo, 0) }}</span></p>
-        </div>
-        {% endfor %}
-    </div>
-    <div class="results-link">
-        <a href="/results">Переглянути результати</a>
+    <div class="container">
+        <header>
+            <h1>Інтерактивна вікторина з Python</h1>
+            <nav>
+                <a href="{{ url_for('index') }}" class="active">Вікторина</a>
+                <a href="{{ url_for('leaderboard') }}">Таблиця лідерів</a>
+            </nav>
+        </header>
+
+        <!-- Екран налаштування гри -->
+        <section id="setup-screen" class="card">
+            <h2>Налаштування гри</h2>
+            <div class="form-group">
+                <label for="player-name">Ваше ім'я / нікнейм:</label>
+                <input type="text" id="player-name" placeholder="Введіть ім'я (наприклад, Дмитро)" required>
+            </div>
+            <div class="form-group">
+                <label for="difficulty">Оберіть рівень складності:</label>
+                <select id="difficulty">
+                    <option value="easy">Легкий (Основи синтаксису — 45 сек)</option>
+                    <option value="medium">Середній (ООП, HTTP, БД — 40 сек)</option>
+                    <option value="hard">Складний (Алгоритми, безпека — 30 сек)</option>
+                </select>
+            </div>
+            <button id="start-btn" class="btn-primary">Розпочати вікторину</button>
+        </section>
+
+        <!-- Екран проходження тесту -->
+        <section id="quiz-screen" class="card hidden">
+            <div class="quiz-header">
+                <span id="progress-text">Питання 1 з 4</span>
+                <span class="timer-badge">Залишилось: <strong id="timer">45</strong> с</span>
+            </div>
+            <div id="question-box">
+                <h3 id="question-title">Текст запитання</h3>
+                <div id="options-container" class="options-grid"></div>
+            </div>
+            <div class="quiz-controls">
+                <button id="next-btn" class="btn-primary" disabled>Наступне питання</button>
+            </div>
+        </section>
+
+        <!-- Екран результатів -->
+        <section id="result-screen" class="card hidden">
+            <h2>Результати вікторини</h2>
+            <p id="result-summary" class="summary-text"></p>
+            <div id="details-list" class="details-container"></div>
+            <div class="result-actions">
+                <button id="restart-btn" class="btn-primary">Спробувати ще раз</button>
+                <a href="{{ url_for('leaderboard') }}" class="btn-secondary">Переглянути таблицю лідерів</a>
+            </div>
+        </section>
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
